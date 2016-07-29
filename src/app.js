@@ -10,11 +10,13 @@ class App extends React.Component {
     return (
       <div>
         <Text
+          id="fall_text"
           title="ISU Fall CDC"
           text="Starts today"
           moreInfo="At 2pm"
           updatedAt={JSON.stringify(new Date())} />
         <Text
+          id="phase_text"
           title="Yet Another"
           text="Attack Phase"
           updatedAt={JSON.stringify(new Date())} />

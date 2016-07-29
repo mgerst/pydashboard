@@ -8,21 +8,17 @@ export default class Text extends Widget {
     super(props);
 
     this.state = {
-      title: props.title,
-      text: props.text,
+      data: {
+        title: props.title,
+        text: props.text,
+        moreInfo: props.moreInfo,
+        updatedAt: props.updatedAt,
+      },
     };
   }
 
-  componentWillReceiveProps(newProps) {
-    this.setState({
-      title: newProps.title,
-      text: props.text,
-    });
-  }
-
   render() {
-    const { title, text } = this.state;
-    const { moreInfo, updatedAt } = this.props;
+    const { title, text, moreInfo, updatedAt } = this.state.data;
 
     return (
       <div className="widget widget-text">
