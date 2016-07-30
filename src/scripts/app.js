@@ -18,7 +18,7 @@ class App extends React.Component {
       <div>
         <Text
           id="fall_text"
-          title="ISU Fall CDC"
+          title="Really Cool Text"
           text="Starts today"
           moreInfo="At 2pm"
           updatedAt={JSON.stringify(new Date())} />

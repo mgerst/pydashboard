@@ -42,7 +42,7 @@ class SocketService extends EventEmitter {
   }
 }
 
-const socketService = new SocketService("ws://localhost:8081");
+const socketService = new SocketService("ws://localhost:5000/ws/");
 dispatcher.register(socketService.handleActions);
 
 export default socketService;

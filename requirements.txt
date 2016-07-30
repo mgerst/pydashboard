@@ -1,2 +1,3 @@
 Flask
 Flask-Webpack~=0.1
+tornado~=4.3
