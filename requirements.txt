@@ -1,0 +1,2 @@
+Flask
+Flask-Webpack~=0.1

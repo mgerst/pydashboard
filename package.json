@@ -5,7 +5,8 @@
   "description": "",
   "main": "src/app.js",
   "scripts": {
-    "dev": "webpack-dev-server --content-base src --inline --hot",
+    "dev": "webpack-dev-server --progress --colors --port 2992  --content-base build/public --inline --hot",
+    "build": "webpack --progress --profile --colors",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -21,7 +22,11 @@
     "babel-preset-stage-0": "^6.5.0",
     "classnames": "^2.2.5",
     "css-loader": "^0.23.1",
+    "extract-text-webpack-plugin": "^1.0.1",
     "flux": "^2.1.1",
+    "glob": "^7.0.5",
+    "image-webpack-loader": "^2.0.0",
+    "manifest-revision-webpack-plugin": "^0.3.0",
     "node-sass": "^3.8.0",
     "react": "^15.2.1",
     "react-dom": "^15.2.1",
