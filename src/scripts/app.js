@@ -4,16 +4,8 @@ import ReactDOM from 'react-dom';
 import Text from './components/Widgets/Text/Text';
 import Clock from './components/Widgets/Clock/Clock';
 
-//import styles from './styles/app.scss';
-
 class App extends React.Component {
   render() {
-    const list = [
-      {label: "L1", value: "V1"},
-      {label: "L2", value: "V2"},
-      {label: "L3", value: "V3"},
-    ];
-
     return (
       <div>
         <Text

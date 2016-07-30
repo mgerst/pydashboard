@@ -7,11 +7,14 @@ from tornado.websocket import WebSocketHandler
 from tornado.ioloop import IOLoop
 import json
 
-from managers import SocketManager
+from pydashboard.managers import SocketManager
+from pydashboard.dashboards import DashboardManager
+import pydashboard.widgets
 
 from flask_webpack import Webpack
 webpack = Webpack()
 socketManager = SocketManager()
+dashboardManager = DashboardManager(socketManager)
 
 
 class WebSocket(WebSocketHandler):
@@ -72,20 +75,20 @@ def index():
     return render_template('index.j2')
 
 
+@app.route('/dashboard/<dashboard_id>', methods=['POST'])
+def update_dashboard(dashboard_id):
+    payload = request.get_json(force=True)
+    evt_type = payload.event
+
+    if evt_type == "reload':
+        dashboardManager.reload_dashboard(dashboard_id)
+    return json.dumps({'error': 'Nothing to update'})
+
+
 @app.route('/widget/<widget_id>', methods=['POST'])
 def update_widget(widget_id):
     payload = request.get_json(force=True)
-    payload.update({
-        'widget_id': widget_id
-    })
-
-    data = {
-        'type': 'UPDATE_WIDGET',
-        'payload': payload,
-    }
-
-    socketManager.send_message(data)
-
+    widgets.update_widget(widget_id, socketManager, payload)
     return json.dumps({'success': True})
 
 if __name__ == '__main__':

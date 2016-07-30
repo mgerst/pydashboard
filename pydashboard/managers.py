@@ -16,3 +16,8 @@ class SocketManager(object):
 
         for socket in self.sockets:
             socket.write_message(json_data)
+
+
+class Manager(object):
+    def __init__(self, socketManager):
+        self._sockets = socketManager

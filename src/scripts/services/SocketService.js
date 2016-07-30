@@ -27,22 +27,26 @@ class SocketService extends EventEmitter {
         this.emit(`update_widget-${widget_id}`);
         break;
       }
+
+      case "RELOAD_DASHBOARD": {
+        console.log("Got dashboard reload");
+        const dashboard_id = payload.dashboard_id;
+
+        if (dashboard_id === '*') {
+          this.emit('reload_dashboards');
+        } else {
+          this.emit(`reload_dashboard-${dashboard_id}`);
+        }
+        break;
+      }
+
     }
   }
 
   getWidgetData(id) {
     return this.widgetData.get(id);
   }
-
-  handleActions(action) {
-    const { type } = action;
-
-    switch (type) {
-    }
-  }
 }
 
 const socketService = new SocketService("ws://localhost:5000/ws/");
-dispatcher.register(socketService.handleActions);
-
 export default socketService;
