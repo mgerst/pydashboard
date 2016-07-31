@@ -6,7 +6,6 @@ class SocketService extends EventEmitter {
     super();
     this._socket = new WebSocket(sock_url);
 
-    this.handleActions = this.handleActions.bind(this);
     this.onMessage = this.onMessage.bind(this);
 
     this._socket.onmessage = this.onMessage;

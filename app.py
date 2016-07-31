@@ -78,10 +78,12 @@ def index():
 @app.route('/dashboard/<dashboard_id>', methods=['POST'])
 def update_dashboard(dashboard_id):
     payload = request.get_json(force=True)
-    evt_type = payload.event
+    evt_type = payload['event']
 
-    if evt_type == "reload':
+    if evt_type == "reload":
         dashboardManager.reload_dashboard(dashboard_id)
+        return json.dumps(
+            {'success': 'Reloaded dashboard {}'.format(dashboard_id)})
     return json.dumps({'error': 'Nothing to update'})
 
 
