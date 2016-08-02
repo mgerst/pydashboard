@@ -39,19 +39,19 @@ export default class Dashboard extends React.Component {
     const layout = this.props.children.map(element => {
       return {
         i: element.props.id,
-        x: element.props.row,
-        y: element.props.col,
-        w: element.props.sizeY,
-        h: element.props.sizeX,
+        y: element.props.row,
+        x: element.props.col,
+        w: element.props.sizeX,
+        h: element.props.sizeY,
       }
     });
     const childComponents = this.props.children.map(element => {
-      return <div key={element.props.id}>{element}</div>;
+      return <div key={element.props.id} className="gs_w">{element}</div>;
     });
 
     return (
-      <ReactGridLayout className="gridster" layout={layout}
-        cols={12} rowHeight={30} width={1200}>
+      <ReactGridLayout className="gridster" layout={layout} isResizeable={false}
+        cols={5} rowHeight={360} width={1580}>
         {childComponents}
       </ReactGridLayout>
     );

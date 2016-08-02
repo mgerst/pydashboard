@@ -12,7 +12,7 @@ export default class IFrame extends Widget {
     };
   }
 
-  renderWidget() {
+  render() {
     const { url } = this.state.data;
 
     return (

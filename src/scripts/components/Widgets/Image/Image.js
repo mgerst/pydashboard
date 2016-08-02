@@ -12,7 +12,7 @@ export default class Image extends Widget {
     };
   }
 
-  renderWidget() {
+  render() {
     const { image } = this.state.data;
 
     return (

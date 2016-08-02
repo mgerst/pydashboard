@@ -15,11 +15,17 @@ class App extends React.Component {
           id="fall_text" title="Really Cool Text"
           text="Starts today"
           moreInfo="At 2pm"
-          row={0} col={0}
+          row={1} col={0}
           updatedAt={JSON.stringify(new Date())} />
         <Clock
           row={1} col={1}
           id="current_time" />
+        <Text
+          id="test_text" title="Next Cool Text"
+          text="Other Text"
+          moreInfo="Cool Stuff"
+          row={2} col={0} sizeX={2}
+          updatedAt={JSON.stringify(new Date())} />
       </Dashboard>
     );
   }

@@ -17,7 +17,7 @@ export default class Text extends Widget {
     };
   }
 
-  renderWidget() {
+  render() {
     const { title, text, moreInfo, updatedAt } = this.state.data;
 
     return (

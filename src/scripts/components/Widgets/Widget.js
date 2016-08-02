@@ -17,7 +17,6 @@ export default class Widget extends React.Component {
 
     // Bind Functions
     this.onUpdate = this.onUpdate.bind(this);
-    this.renderWidget = this.renderWidget.bind(this);
 
     // Register Listeners
     SocketService.on(`update_widget-${id}`, this.onUpdate);
@@ -30,21 +29,6 @@ export default class Widget extends React.Component {
   onUpdate() {
     this.setState({data: SocketService.getWidgetData(this.id)})
     // Default Implementation
-  }
-
-  renderWidget() {
-    // Default Implementations
-  }
-
-  render() {
-    const widgetRender = this.renderWidget();
-    const { row, col, sizeX, sizeY } = this.props;
-
-    return (
-      <div data-row={row} data-col={col} data-sizex={sizeX} data-sizey={sizeY}>
-        {widgetRender}
-      </div>
-    );
   }
 }
 

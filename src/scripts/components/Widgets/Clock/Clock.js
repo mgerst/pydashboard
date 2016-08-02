@@ -39,7 +39,7 @@ export default class Clock extends Widget {
     }
   }
 
-  renderWidget() {
+  render() {
     const { date, time } = this.state.data;
 
     return (

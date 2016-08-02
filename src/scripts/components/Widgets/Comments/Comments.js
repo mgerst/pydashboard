@@ -39,7 +39,7 @@ export default class Comments extends Widget {
     }
   }
 
-  renderWidget() {
+  render() {
     const { title, moreInfo } = this.state.data;
     const { current_comment } = this.state;
     const { quote } = current_comment;
