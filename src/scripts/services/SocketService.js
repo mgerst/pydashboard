@@ -1,10 +1,11 @@
 import dispatcher from "../dispatcher";
 import { EventEmitter } from "events";
+import ReconnectingWebSocket from 'reconnecting-websocket';
 
 class SocketService extends EventEmitter {
   constructor(sock_url) {
     super();
-    this._socket = new WebSocket(sock_url);
+    this._socket = new ReconnectingWebSocket(sock_url);
 
     this.onMessage = this.onMessage.bind(this);
 
@@ -20,16 +21,13 @@ class SocketService extends EventEmitter {
 
     switch (type) {
       case "UPDATE_WIDGET": {
-        console.log("Got widget update");
         const widget_id = payload.widget_id;
         this.widgetData.set(widget_id, payload);
         this.emit(`update_widget-${widget_id}`);
-        console.log(`emitted: update_widget-${widget_id}`)
         break;
       }
 
       case "RELOAD_DASHBOARD": {
-        console.log("Got dashboard reload");
         const dashboard_id = payload.dashboard_id;
 
         if (dashboard_id === '*') {
