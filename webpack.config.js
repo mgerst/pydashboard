@@ -56,15 +56,15 @@ var chunks = {
   app_css: [
     path.join(contextRoot, assets.styles.path, 'app.scss')
   ],
-  //vendor_js: [],
-  //vendor_css: []
+  vendor_js: [
+  ],
+  vendor_css: [
+  ]
 };
 
 // Find widget stylesheets
 const widget_css = glob.sync(path.join(contextRoot, "scripts/components/Widgets/**/*.scss"));
 chunks.app_css = chunks.app_css.concat(widget_css);
-
-console.log("app_css: ", chunks.app_css);
 
 // Avoid parsing this code to speed up rebuilds.
 var noParse = [
@@ -87,7 +87,7 @@ var plugins = [
   new webpack.NoErrorsPlugin(),
 
   // http://webpack.github.io/docs/list-of-plugins.html#commonschunkplugins
-  //new webpack.optimize.CommonsChunkPlugin('vendor_js', 'vendor_js.js'),
+  new webpack.optimize.CommonsChunkPlugin('vendor_js', 'vendor_js.js'),
 
   // http://github.com/webpack/extract-text-webpack-plugin
   extractTextPlugin,
@@ -118,6 +118,7 @@ if (node_env !== 'development') {
 module.exports = {
   context: path.join(__dirname, './'),
   entry: chunks,
+  devtool: node_env === 'development' ? 'inline-source-map' : '',
   output: {
     path: buildOutputPath,
     publicPath: publicPath,
@@ -126,7 +127,10 @@ module.exports = {
   },
   resolve: {
     // Allow requiring files without supplying the extension.
-    extensions: ['', '.js', '.scss']
+    extensions: ['', '.js', '.scss'],
+    alias: {
+      jquery: "jquery/src/jquery"
+    }
   },
   module: {
     noParse: noParse,

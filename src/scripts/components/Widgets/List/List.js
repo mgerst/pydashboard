@@ -15,7 +15,7 @@ export default class List extends Widget {
     };
   }
 
-  render() {
+  renderWidget() {
     const { title, moreInfo, updatedAt, items } = this.state.data;
 
     const listItems = items.map((item) => {

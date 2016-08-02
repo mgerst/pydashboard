@@ -12,9 +12,9 @@ export default class IFrame extends Widget {
     };
   }
 
-  render() {
+  renderWidget() {
     const { url } = this.state.data;
-    
+
     return (
       <div className="widget widget-iframe">
         <iframe src={url} frameborder={0}></iframe>

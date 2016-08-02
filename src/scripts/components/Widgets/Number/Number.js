@@ -47,7 +47,7 @@ export default class Number extends Widget {
     return null
   }
 
-  render() {
+  renderWidget() {
     const { title, current, moreInfo, updatedAt, status } = this.state.data;
     const difference = this.difference();
     const arrow = this.arrow();

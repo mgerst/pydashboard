@@ -1,5 +1,6 @@
 import React, { PropTypes as T } from 'react';
 import SocketService from '../services/SocketService';
+import ReactGridLayout from 'react-grid-layout';
 
 export const dashboards = new Map;
 
@@ -29,10 +30,30 @@ export default class Dashboard extends React.Component {
   }
 
   render() {
+    const style = {
+      fontSize: '12px'
+    }
+    const location = window.location.hostname;
+    const port = window.location.port;
+
+    const layout = this.props.children.map(element => {
+      return {
+        i: element.props.id,
+        x: element.props.row,
+        y: element.props.col,
+        w: element.props.sizeY,
+        h: element.props.sizeX,
+      }
+    });
+    const childComponents = this.props.children.map(element => {
+      return <div key={element.props.id}>{element}</div>;
+    });
+
     return (
-      <div className="dashboard">
-        {this.props.children}
-      </div>
+      <ReactGridLayout className="gridster" layout={layout}
+        cols={12} rowHeight={30} width={1200}>
+        {childComponents}
+      </ReactGridLayout>
     );
   }
 }
