@@ -9,7 +9,7 @@ import json
 
 from pydashboard.managers import SocketManager
 from pydashboard.dashboards import DashboardManager
-import pydashboard.widgets
+from pydashboard import widgets
 
 from flask_webpack import Webpack
 webpack = Webpack()

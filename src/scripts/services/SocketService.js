@@ -24,6 +24,7 @@ class SocketService extends EventEmitter {
         const widget_id = payload.widget_id;
         this.widgetData.set(widget_id, payload);
         this.emit(`update_widget-${widget_id}`);
+        console.log(`emitted: update_widget-${widget_id}`)
         break;
       }
 

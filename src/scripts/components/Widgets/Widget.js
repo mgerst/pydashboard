@@ -19,6 +19,7 @@ export default class Widget extends React.Component {
     this.onUpdate = this.onUpdate.bind(this);
 
     // Register Listeners
+    console.log(`Registered listener for: update_widget-${id}`)
     SocketService.on(`update_widget-${id}`, this.onUpdate);
   }
 
@@ -27,6 +28,7 @@ export default class Widget extends React.Component {
   }
 
   onUpdate() {
+    console.log("Ran default onUpdate");
     this.setState({data: SocketService.getWidgetData(this.id)})
     // Default Implementation
   }

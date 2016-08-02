@@ -4,8 +4,8 @@ import ReactGridLayout from 'react-grid-layout';
 
 import Text from './components/Widgets/Text/Text';
 import Clock from './components/Widgets/Clock/Clock';
+import Number from './components/Widgets/Number/Number';
 import Dashboard from './components/Dashboard';
-
 
 class App extends React.Component {
   render() {
@@ -26,6 +26,9 @@ class App extends React.Component {
           moreInfo="Cool Stuff"
           row={2} col={0} sizeX={2}
           updatedAt={JSON.stringify(new Date())} />
+        <Number
+          id="test_number" title="Really Cool Number"
+          current={5} row={1} col={2} />
       </Dashboard>
     );
   }

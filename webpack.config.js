@@ -59,6 +59,7 @@ var chunks = {
   vendor_js: [
   ],
   vendor_css: [
+    path.join(contextRoot, "vendor", "styles", "css", "font-awesome.css"),
   ]
 };
 
