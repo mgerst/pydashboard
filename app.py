@@ -1,11 +1,13 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, abort
 from werkzeug.serving import run_simple
 
 from tornado.wsgi import WSGIContainer
 from tornado.web import Application, FallbackHandler
 from tornado.websocket import WebSocketHandler
 from tornado.ioloop import IOLoop
+from functools import wraps
 import json
+import os
 
 from pydashboard.managers import SocketManager
 from pydashboard.dashboards import DashboardManager
@@ -58,6 +60,10 @@ def create_app(settings_override=None):
     }
 
     app.config.update(params)
+    app.config.from_object('pydashboard.config')
+    settings_var = 'PYDASHBOARD_SETTINGS'
+    if settings_var in os.environ:
+        app.config.from_envvar(settings_var)
 
     if settings_override:
         app.config.update(settings_override)
@@ -70,12 +76,23 @@ def create_app(settings_override=None):
 app = create_app()
 
 
+def protected(func):
+    @wraps(func)
+    def protect(*args, **kwargs):
+        payload = request.get_json(force=True)
+        if payload['AUTH_TOKEN'] == app.config['AUTH_TOKEN']:
+            return func(*args, **kwargs)
+        abort(401)  # Not authorized
+    return protect
+
+
 @app.route('/')
 def index():
     return render_template('index.j2')
 
 
 @app.route('/dashboard/<dashboard_id>', methods=['POST'])
+@protected
 def update_dashboard(dashboard_id):
     payload = request.get_json(force=True)
     evt_type = payload['event']
@@ -94,7 +111,6 @@ def update_widget(widget_id):
     return json.dumps({'success': True})
 
 if __name__ == '__main__':
-    # run_simple('localhost', 5000, app, use_reloader=True, use_debugger=True)
     container = WSGIContainer(app)
     server = Application([
         (r'/ws/', WebSocket),
