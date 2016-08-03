@@ -27,9 +27,19 @@ export default class Widget extends React.Component {
   }
 
   onUpdate() {
-    console.log("Ran default onUpdate");
-    this.setState({data: SocketService.getWidgetData(this.id)})
+    const widgetData = SocketService.getWidgetData(this.id);
+    const newData = Object.assign(this.state.data, widgetData);
+    this.setState({data: newData})
     // Default Implementation
+  }
+
+  get updatedAtMessage() {
+    if (this.state.data.updatedAt) {
+      const timestamp = new Date(this.state.data.updatedAt * 1000);
+      const hours = timestamp.getHours();
+      const minutes = ("0" + timestamp.getMinutes()).slice(-2);
+      return `Last updated at ${hours}:${minutes}`
+    }
   }
 }
 

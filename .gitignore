@@ -4,3 +4,4 @@ bower_components/
 *.log
 __pycache__/
 build/
+history.yml

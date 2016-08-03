@@ -18,14 +18,15 @@ export default class Text extends Widget {
   }
 
   render() {
-    const { title, text, moreInfo, updatedAt } = this.state.data;
+    const { title, text, moreInfo } = this.state.data;
+    const updatedAtMessage = this.updatedAtMessage;
 
     return (
       <div className="widget widget-text">
         <h1 className="title">{title}</h1>
         <h3>{text}</h3>
         <p className="more-info">{moreInfo}</p>
-        <p className="updated-at">{updatedAt}</p>
+        <p className="updated-at">{updatedAtMessage}</p>
       </div>
     );
   }

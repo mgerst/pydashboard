@@ -41,7 +41,7 @@ export default class List extends Widget {
         { list }
 
         <p className="more-info">{ moreInfo }</p>
-        <p className="updated-at">{ updatedAt }</p>
+        <p className="updated-at">{ this.updatedAtMessage }</p>
       </div>
     );
   }

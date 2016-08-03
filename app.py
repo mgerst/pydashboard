@@ -26,17 +26,9 @@ class WebSocket(WebSocketHandler):
 
     def open(self):
         print("Socket opened.")
-        data = {
-            'type': 'UPDATE_WIDGET',
-            'payload': {
-                'widget_id': 'fall_text',
-                'text': 'Test Text',
-                'title': 'Test Title',
-            },
-        }
+        widgets.init_widgets(self)
 
     def on_message(self, message):
-        self.write_message("Received: " + message)
         print("Received message: " + message)
 
     def on_close(self):
@@ -96,6 +88,7 @@ def index(dashboard='index'):
 @protected
 def update_dashboard(dashboard_id):
     payload = request.get_json(force=True)
+    del payload['AUTH_TOKEN']
     evt_type = payload['event']
 
     if evt_type == "reload":
@@ -109,10 +102,12 @@ def update_dashboard(dashboard_id):
 @protected
 def update_widget(widget_id):
     payload = request.get_json(force=True)
+    del payload['AUTH_TOKEN'] 
     widgets.update_widget(widget_id, socketManager, payload)
     return json.dumps({'success': True})
 
 if __name__ == '__main__':
+    widgets.read_history()
     container = WSGIContainer(app)
     server = Application([
         (r'/ws/', WebSocket),
