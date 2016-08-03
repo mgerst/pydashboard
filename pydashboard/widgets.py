@@ -4,7 +4,9 @@ import os
 import time
 
 history = {}
-history_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'history.yml')
+history_file = os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                            'history.yml')
+
 
 def update_widget(id, sockets, payload):
     """
@@ -53,9 +55,11 @@ def init_widgets(socket):
         json_data = json.dumps(data)
         socket.write_message(json_data)
 
+
 def write_history():
     with open(history_file, 'w') as f:
         f.write(yaml.dump(history, default_flow_style=False))
+
 
 def read_history():
     if os.path.exists(history_file):

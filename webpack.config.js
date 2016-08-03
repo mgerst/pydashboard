@@ -67,7 +67,7 @@ var chunks = {
 const widget_css = glob.sync(path.join(contextRoot, "scripts/components/Widgets/**/*.scss"));
 chunks.app_css = chunks.app_css.concat(widget_css);
 
-const dashboard_js = glob.sync(path.join(context, "dashboards"))
+const dashboard_js = glob.sync(path.join(context, "dashboards/*.js"))
 chunks.app_js = dashboard_js.concat(chunks.app_js);
 //chunks.app_js = chunks.app_js.concat(dashboard_js);
 

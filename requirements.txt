@@ -2,3 +2,4 @@ Flask~=0.11
 Flask-Webpack~=0.1
 tornado~=4.3
 pyyaml~=3.11
+APScheduler~=3.2

@@ -9,6 +9,8 @@ from functools import wraps
 import json
 import os
 
+from apscheduler.schedulers.background import BackgroundScheduler
+
 from pydashboard.managers import SocketManager
 from pydashboard.dashboards import DashboardManager
 from pydashboard import widgets
@@ -66,13 +68,47 @@ def create_app(settings_override=None):
 
 
 app = create_app()
+scheduler = BackgroundScheduler()
+
+
+current_up = 0
+current_partial = 0
+current_down = 0
+last_up = 0
+last_partial = 0
+last_down = 0
+
+
+@scheduler.scheduled_job(trigger='interval', seconds=30)
+def poll_services():
+    global current_up, current_partial, current_down
+    global last_up, last_partial, last_down
+    print("Polling services")
+    import random
+    last_up = current_up
+    last_partial = current_partial
+    last_down = current_down
+
+    current_up = random.randint(0, 50)
+    current_partial = random.randint(0, 50)
+    current_down = random.randint(0, 50)
+    widgets.update_widget('services_up', socketManager, {
+        'current': current_up, 'last': last_up,
+    })
+    widgets.update_widget('services_partial', socketManager, {
+        'current': current_partial, 'last': last_partial,
+    })
+    widgets.update_widget('services_down', socketManager, {
+        'current': current_down, 'last': last_down,
+    })
 
 
 def protected(func):
     @wraps(func)
     def protect(*args, **kwargs):
         payload = request.get_json(force=True)
-        if 'AUTH_TOKEN' in payload and payload['AUTH_TOKEN'] == app.config['AUTH_TOKEN']:
+        if 'AUTH_TOKEN' in payload and \
+                payload['AUTH_TOKEN'] == app.config['AUTH_TOKEN']:
             return func(*args, **kwargs)
         abort(401)  # Not authorized
     return protect
@@ -102,7 +138,7 @@ def update_dashboard(dashboard_id):
 @protected
 def update_widget(widget_id):
     payload = request.get_json(force=True)
-    del payload['AUTH_TOKEN'] 
+    del payload['AUTH_TOKEN']
     widgets.update_widget(widget_id, socketManager, payload)
     return json.dumps({'success': True})
 
@@ -114,4 +150,5 @@ if __name__ == '__main__':
         (r'.*', FallbackHandler, dict(fallback=container))
     ])
     server.listen(5000)
+    scheduler.start()
     IOLoop.instance().start()
