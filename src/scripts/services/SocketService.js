@@ -16,7 +16,6 @@ class SocketService extends EventEmitter {
   onMessage(evt) {
     let {data} = evt;
     data = JSON.parse(data);
-    console.log(data);
     const { type, payload } = data;
 
     switch (type) {

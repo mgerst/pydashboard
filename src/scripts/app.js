@@ -13,9 +13,7 @@ class App extends React.Component {
     const container = document.getElementById('appContainer');
     const dashboard_id = container.dataset.dashboardId;
 
-    console.log(`Loading dashboard: ${dashboard_id}`);
     const DB = DashboardManager.getDashboard(dashboard_id);
-    console.log(DB);
     if (DB == null || DB == undefined) {
       console.warn(`Unknown dashboard: ${dashboard_id}`);
       return (

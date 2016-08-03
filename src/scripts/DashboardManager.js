@@ -7,7 +7,6 @@ class DashboardManager {
   }
 
   registerDashboard(id, component) {
-    console.log(`Registered Dashboard: ${id}`);
     this._dashboards.set(id, component);
   }
 

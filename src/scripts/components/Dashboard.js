@@ -25,7 +25,6 @@ export default class Dashboard extends React.Component {
   }
 
   onReload() {
-    console.log(`Dashboard ${this.id} reloated`);
     window.location.reload(true);
   }
 
