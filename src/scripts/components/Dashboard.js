@@ -67,7 +67,7 @@ export default class Dashboard extends React.Component {
 
     return (
       <ReactGridLayout className="gridster" layout={layout} isResizeable={false}
-        cols={5} rowHeight={360} width={1580}>
+        cols={5} rowHeight={340} width={1580}>
         {childComponents}
       </ReactGridLayout>
     );

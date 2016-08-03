@@ -80,7 +80,7 @@ export default class Number extends Widget {
           <i className={classnames(styles)}></i><span>{ difference }</span>
         </p>
         <p className="more-info">{ moreInfo }</p>
-        <p className="upated-at">{ this.updatedAtMessage }</p>
+        <p className="updated-at">{ this.updatedAtMessage }</p>
       </div>
     );
   }
