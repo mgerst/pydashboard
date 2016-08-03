@@ -14,7 +14,7 @@
     <link href='//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>
   </head>
   <body>
-    <div id="appContainer"></div>
+    <div id="appContainer" data-dashboard-id="{{ dashboard_id }}"></div>
     {{ javascript_tag('vendor_js') | safe }}
     {{ javascript_tag('app_js') | safe }}
   </body>

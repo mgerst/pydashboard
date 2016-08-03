@@ -6,9 +6,29 @@ import Text from './components/Widgets/Text/Text';
 import Clock from './components/Widgets/Clock/Clock';
 import Number from './components/Widgets/Number/Number';
 import Dashboard from './components/Dashboard';
+import DashboardManager from './DashboardManager';
 
 class App extends React.Component {
   render() {
+    const container = document.getElementById('appContainer');
+    const dashboard_id = container.dataset.dashboardId;
+
+    console.log(`Loading dashboard: ${dashboard_id}`);
+    const DB = DashboardManager.getDashboard(dashboard_id);
+    console.log(DB);
+    if (DB == null || DB == undefined) {
+      console.warn(`Unknown dashboard: ${dashboard_id}`);
+      return (
+        <Dashboard className="gridster" id="no_dashboard">
+          <Text id="not_found" title="Dashboard Not Found"
+            row={1} col={0} sizeX={5} sizeY={2} />
+        </Dashboard>
+      );
+    }
+    return (
+      <DB />
+    );
+    /*
     return (
       <Dashboard className="gridster" id="test_dashboard">
         <Text
@@ -31,6 +51,7 @@ class App extends React.Component {
           current={5} row={1} col={2} />
       </Dashboard>
     );
+    */
   }
 }
 

@@ -36,18 +36,35 @@ export default class Dashboard extends React.Component {
     const location = window.location.hostname;
     const port = window.location.port;
 
-    const layout = this.props.children.map(element => {
-      return {
+
+    let layout;
+    let childComponents;
+    if (this.props.children.map == undefined) {
+      const element = this.props.children;
+      layout = [{
         i: element.props.id,
         y: element.props.row,
         x: element.props.col,
         w: element.props.sizeX,
         h: element.props.sizeY,
-      }
-    });
-    const childComponents = this.props.children.map(element => {
-      return <div key={element.props.id} className="gs_w">{element}</div>;
-    });
+      }];
+
+      childComponents = <div key={element.props.id} className="gs_w">{element}</div>;
+    } else {
+      layout = this.props.children.map(element => {
+        return {
+          i: element.props.id,
+          y: element.props.row,
+          x: element.props.col,
+          w: element.props.sizeX,
+          h: element.props.sizeY,
+        }
+      });
+
+      childComponents = this.props.children.map(element => {
+        return <div key={element.props.id} className="gs_w">{element}</div>;
+      });
+    }
 
     return (
       <ReactGridLayout className="gridster" layout={layout} isResizeable={false}

@@ -45,7 +45,7 @@ var assets = {
   styles: {
     path: 'styles',
     filename: '[name].[chunkhash].css'
-  }
+  },
 };
 
 // Which top level JS and CSS files should get output?
@@ -66,6 +66,10 @@ var chunks = {
 // Find widget stylesheets
 const widget_css = glob.sync(path.join(contextRoot, "scripts/components/Widgets/**/*.scss"));
 chunks.app_css = chunks.app_css.concat(widget_css);
+
+const dashboard_js = glob.sync(path.join(context, "dashboards"))
+chunks.app_js = dashboard_js.concat(chunks.app_js);
+//chunks.app_js = chunks.app_js.concat(dashboard_js);
 
 // Avoid parsing this code to speed up rebuilds.
 var noParse = [

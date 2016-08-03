@@ -80,15 +80,16 @@ def protected(func):
     @wraps(func)
     def protect(*args, **kwargs):
         payload = request.get_json(force=True)
-        if payload['AUTH_TOKEN'] == app.config['AUTH_TOKEN']:
+        if 'AUTH_TOKEN' in payload and payload['AUTH_TOKEN'] == app.config['AUTH_TOKEN']:
             return func(*args, **kwargs)
         abort(401)  # Not authorized
     return protect
 
 
 @app.route('/')
-def index():
-    return render_template('index.j2')
+@app.route('/<dashboard>')
+def index(dashboard='index'):
+    return render_template('index.j2', dashboard_id=dashboard)
 
 
 @app.route('/dashboard/<dashboard_id>', methods=['POST'])
@@ -105,6 +106,7 @@ def update_dashboard(dashboard_id):
 
 
 @app.route('/widget/<widget_id>', methods=['POST'])
+@protected
 def update_widget(widget_id):
     payload = request.get_json(force=True)
     widgets.update_widget(widget_id, socketManager, payload)
