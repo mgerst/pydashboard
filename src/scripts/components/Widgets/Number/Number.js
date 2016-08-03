@@ -1,5 +1,6 @@
 import React, { PropTypes as T } from 'react';
 import Widget from '../Widget';
+import AnimatedNumber from 'react-animated-number';
 import classnames from 'classnames';
 
 export default class Number extends Widget {
@@ -73,7 +74,8 @@ export default class Number extends Widget {
     return (
       <div className={classnames(widgetStyles)}>
         <h1 className="title">{ title }</h1>
-        <h2 className="value">{ current }</h2>
+        <h2 className="value"><AnimatedNumber value={ current }
+          stepPrecision={0} /></h2>
         <p className="change-rate">
           <i className={classnames(styles)}></i><span>{ difference }</span>
         </p>
