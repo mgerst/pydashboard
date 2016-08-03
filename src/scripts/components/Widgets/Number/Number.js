@@ -57,8 +57,13 @@ export default class Number extends Widget {
       'fa fa-arrow-down': false,
     };
 
+    let widgetStyles = {
+      'widget': true,
+      'widget-number': true,
+    }
+
     if (this.state.data.status) {
-      styles[`status-${status}`] = true;
+      widgetStyles[`status-${status}`] = true;
     }
 
     if (arrow) {
@@ -66,7 +71,7 @@ export default class Number extends Widget {
     }
 
     return (
-      <div className="widget widget-number">
+      <div className={classnames(widgetStyles)}>
         <h1 className="title">{ title }</h1>
         <h2 className="value">{ current }</h2>
         <p className="change-rate">
