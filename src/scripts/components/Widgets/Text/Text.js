@@ -1,8 +1,6 @@
 import React from 'react';
 import Widget from '../Widget';
 
-import styles from './Text.scss';
-
 export default class Text extends Widget {
   constructor(props) {
     super(props);

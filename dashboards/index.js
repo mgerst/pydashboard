@@ -4,6 +4,7 @@ import DashboardManager from '../src/scripts/DashboardManager';
 
 import Text from '../src/scripts/components/Widgets/Text/Text';
 import Number from '../src/scripts/components/Widgets/Number/Number';
+import Meter from '../src/scripts/components/Widgets/Meter/Meter';
 import Dashboard from '../src/scripts/components/Dashboard';
 
 class IndexDashboard extends React.Component {
@@ -17,6 +18,7 @@ class IndexDashboard extends React.Component {
         <Number
           id="test_number" title="Cool Number"
           current={5} row={1} col={1} />
+        {/* <Meter id="test_meter" row={1} col={2} /> */}
       </Dashboard>
     );
   }

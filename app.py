@@ -8,12 +8,15 @@ from tornado.ioloop import IOLoop
 from functools import wraps
 import json
 import os
+import sys
 
 from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.events import EVENT_ALL
 
 from pydashboard.managers import SocketManager
 from pydashboard.dashboards import DashboardManager
 from pydashboard import widgets
+from pydashboard import jobs
 
 from flask_webpack import Webpack
 webpack = Webpack()
@@ -71,38 +74,6 @@ app = create_app()
 scheduler = BackgroundScheduler()
 
 
-current_up = 0
-current_partial = 0
-current_down = 0
-last_up = 0
-last_partial = 0
-last_down = 0
-
-
-@scheduler.scheduled_job(trigger='interval', seconds=30)
-def poll_services():
-    global current_up, current_partial, current_down
-    global last_up, last_partial, last_down
-    print("Polling services")
-    import random
-    last_up = current_up
-    last_partial = current_partial
-    last_down = current_down
-
-    current_up = random.randint(0, 50)
-    current_partial = random.randint(0, 50)
-    current_down = random.randint(0, 50)
-    widgets.update_widget('services_up', socketManager, {
-        'current': current_up, 'last': last_up,
-    })
-    widgets.update_widget('services_partial', socketManager, {
-        'current': current_partial, 'last': last_partial,
-    })
-    widgets.update_widget('services_down', socketManager, {
-        'current': current_down, 'last': last_down,
-    })
-
-
 def protected(func):
     @wraps(func)
     def protect(*args, **kwargs):
@@ -142,6 +113,7 @@ def update_widget(widget_id):
     widgets.update_widget(widget_id, socketManager, payload)
     return json.dumps({'success': True})
 
+
 if __name__ == '__main__':
     widgets.read_history()
     container = WSGIContainer(app)
@@ -150,5 +122,9 @@ if __name__ == '__main__':
         (r'.*', FallbackHandler, dict(fallback=container))
     ])
     server.listen(5000)
+
+    sys.path.insert(0, 'jobs')
+    jobs.find_jobs('jobs')
+
     scheduler.start()
     IOLoop.instance().start()

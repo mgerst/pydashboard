@@ -3,6 +3,19 @@ import Widget from '../Widget';
 import AnimatedNumber from 'react-animated-number';
 import classnames from 'classnames';
 
+/**
+ * Because for some reason AnimatedNumber passes all of its props to
+ * the component it creates to put the number in, which React doesn't
+ * like. This one pulls out the relevant one.
+ */
+class NumberHolder extends React.Component {
+  render() {
+    return (
+      <h2 className={this.props.className}>{this.props.children}</h2>
+    );
+  }
+}
+
 export default class Number extends Widget {
   constructor(props) {
     super(props);
@@ -74,8 +87,8 @@ export default class Number extends Widget {
     return (
       <div className={classnames(widgetStyles)}>
         <h1 className="title">{ title }</h1>
-        <h2 className="value"><AnimatedNumber value={ current }
-          stepPrecision={0} /></h2>
+        <AnimatedNumber className="value" component={NumberHolder} value={ current }
+          stepPrecision={0} />
         <p className="change-rate">
           <i className={classnames(styles)}></i><span>{ difference }</span>
         </p>
@@ -85,3 +98,7 @@ export default class Number extends Widget {
     );
   }
 }
+
+Number.defaultProps = Object.assign(Number.defaultProps, {
+  current: 0
+})
