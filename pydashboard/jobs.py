@@ -12,5 +12,9 @@ def find_jobs(job_dir):
     jobs = [name for _, name, is_pkg in pkgutil.iter_modules([job_dir])
             if not is_pkg and not name.startswith('_')]
 
+    job_mods = []
+
     for job in jobs:
-        import_module(job)
+        job_mods.append(import_module(job))
+
+    return job_mods

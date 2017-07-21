@@ -1,4 +1,4 @@
-from app import scheduler, socketManager
+from app import socketManager
 from pydashboard import widgets
 import random
 
@@ -8,10 +8,10 @@ last_up = last_partial = last_down = 0
 print("Loaded Services Job")
 
 
-@scheduler.scheduled_job(trigger='interval', seconds=30)
 def poll_services():
     global current_up, current_partial, current_down
     global last_up, last_partial, last_down
+    print("Polling Services")
 
     # Update History
     last_up = current_up
@@ -32,3 +32,12 @@ def poll_services():
     widgets.update_widget('services_down', socketManager, {
         'current': current_down, 'last': last_down,
     })
+
+JOB = {
+    'func': poll_services,
+    'args': {
+        'trigger': 'interval',
+        'seconds': 30,
+    },
+}
+

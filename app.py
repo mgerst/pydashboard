@@ -1,17 +1,17 @@
-from flask import Flask, render_template, request, abort
-from werkzeug.serving import run_simple
-
-from tornado.wsgi import WSGIContainer
-from tornado.web import Application, FallbackHandler
-from tornado.websocket import WebSocketHandler
-from tornado.ioloop import IOLoop
+#!/usr/bin/env python3
 from functools import wraps
 import json
 import os
 import sys
 
+from flask import Flask, render_template, request, abort
+
+from tornado.wsgi import WSGIContainer
+from tornado.web import Application, FallbackHandler
+from tornado.websocket import WebSocketHandler
+from tornado.ioloop import IOLoop
+
 from apscheduler.schedulers.background import BackgroundScheduler
-from apscheduler.events import EVENT_ALL
 
 from pydashboard.managers import SocketManager
 from pydashboard.dashboards import DashboardManager
@@ -19,6 +19,7 @@ from pydashboard import widgets
 from pydashboard import jobs
 
 from flask_webpack import Webpack
+
 webpack = Webpack()
 socketManager = SocketManager()
 dashboardManager = DashboardManager(socketManager)
@@ -124,7 +125,13 @@ if __name__ == '__main__':
     server.listen(5000)
 
     sys.path.insert(0, 'jobs')
-    jobs.find_jobs('jobs')
+    registered_jobs = jobs.find_jobs('jobs')
+
+    for job in registered_jobs:
+        if not hasattr(job, 'JOB'):
+            continue
+        
+        scheduler.add_job(job.JOB['func'], **job.JOB['args'])
 
     scheduler.start()
     IOLoop.instance().start()
