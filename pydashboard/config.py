@@ -1,2 +1,4 @@
 DEBUG = True
 AUTH_TOKEN = 'YOUR_AUTH_TOKEN_HERE'
+REDIS_HOST = 'localhost'
+REDIS_DB = 0

@@ -1,13 +1,6 @@
-from pydashboard.managers import Manager
+from pydashboard.extensions import socketio
 
 
-class DashboardManager(Manager):
+class DashboardManager:
     def reload_dashboard(self, id):
-        data = {
-            'type': 'RELOAD_DASHBOARD',
-            'payload': {
-                'dashboard_id': id,
-            }
-        }
-
-        self._sockets.send_message(data)
+        socketio.emit('reload_dashboard', {'dashboard_id': id}, broadcast=True)

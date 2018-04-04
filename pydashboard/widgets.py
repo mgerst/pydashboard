@@ -1,59 +1,47 @@
-import yaml
-import json
 import os
 import time
+
+import yaml
+
+from pydashboard.extensions import socketio
 
 history = {}
 history_file = os.path.join(os.path.dirname(os.path.dirname(__file__)),
                             'history.yml')
 
 
-def update_widget(id, sockets, payload):
+def update_widget(id, payload):
     """
     Send an update the the specified widget.
 
     :param str id: The widget id to update
-    :param SocketManager sockets: The socket manager used by app.py
     :param dict payload: The data to send
     """
     payload.update({
         'widget_id': id,
         'updatedAt': int(time.time()),
     })
-    data = {
-        'type': 'UPDATE_WIDGET',
-        'payload': payload,
-    }
 
     if id in history:
         history[id].update(payload)
     else:
         history[id] = payload
-    sockets.send_message(data)
+    socketio.emit('update_widget', payload, broadcast=True)
     write_history()
 
 
-def init_widgets(socket):
+def init_widgets():
     """
     Send the initial data for a widget from the history.
 
     This function is called for all widgets when a connection is opened. If the
     widget does not exist in history or the current application state, the
     default values provided in the dashboard definition are used.
-
-    :param str id: The widget id to init
-    :param WebSocket socket: The raw socket
-    :param dict payload: The widget data
     """
+    print("Sending initial widget status")
     for id, payload in history.items():
         payload.update({'widget_id': id})
-        data = {
-            # This is technically an "Update" from the default values
-            'type': 'UPDATE_WIDGET',
-            'payload': payload,
-        }
-        json_data = json.dumps(data)
-        socket.write_message(json_data)
+        socketio.emit('update_widget', payload)
 
 
 def write_history():

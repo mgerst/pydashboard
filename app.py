@@ -1,45 +1,16 @@
 #!/usr/bin/env python3
-from functools import wraps
 import json
 import os
 import sys
+from functools import wraps
 
+import redis
+from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask, render_template, request, abort
 
-from tornado.wsgi import WSGIContainer
-from tornado.web import Application, FallbackHandler
-from tornado.websocket import WebSocketHandler
-from tornado.ioloop import IOLoop
-
-from apscheduler.schedulers.background import BackgroundScheduler
-
-from pydashboard.managers import SocketManager
-from pydashboard.dashboards import DashboardManager
-from pydashboard import widgets
 from pydashboard import jobs
-
-from flask_webpack import Webpack
-
-webpack = Webpack()
-socketManager = SocketManager()
-dashboardManager = DashboardManager(socketManager)
-
-
-class WebSocket(WebSocketHandler):
-    def __init__(self, *args, **kwargs):
-        super(WebSocket, self).__init__(*args, **kwargs)
-        socketManager.add_client(self)
-
-    def open(self):
-        print("Socket opened.")
-        widgets.init_widgets(self)
-
-    def on_message(self, message):
-        print("Received message: " + message)
-
-    def on_close(self):
-        print("Socket closed.")
-        socketManager.remove_client(self)
+from pydashboard import widgets
+from pydashboard.extensions import webpack, socketio
 
 
 def create_app(settings_override=None):
@@ -66,7 +37,15 @@ def create_app(settings_override=None):
     if settings_override:
         app.config.update(settings_override)
 
+    try:
+        r = redis.StrictRedis(host=app.config['REDIS_HOST'], db=app.config['REDIS_DB'])
+        app.config['REDIS'] = r
+        print("Connected to redis")
+    except:
+        app.config['REDIS'] = None
+
     webpack.init_app(app)
+    socketio.init_app(app)
 
     return app
 
@@ -83,6 +62,7 @@ def protected(func):
                 payload['AUTH_TOKEN'] == app.config['AUTH_TOKEN']:
             return func(*args, **kwargs)
         abort(401)  # Not authorized
+
     return protect
 
 
@@ -100,7 +80,7 @@ def update_dashboard(dashboard_id):
     evt_type = payload['event']
 
     if evt_type == "reload":
-        dashboardManager.reload_dashboard(dashboard_id)
+        socketio.emit('reload_dashboard', {'dashboard_id': dashboard_id})
         return json.dumps(
             {'success': 'Reloaded dashboard {}'.format(dashboard_id)})
     return json.dumps({'error': 'Nothing to update'})
@@ -111,18 +91,17 @@ def update_dashboard(dashboard_id):
 def update_widget(widget_id):
     payload = request.get_json(force=True)
     del payload['AUTH_TOKEN']
-    widgets.update_widget(widget_id, socketManager, payload)
+    widgets.update_widget(widget_id, payload)
     return json.dumps({'success': True})
+
+
+@socketio.on('connect')
+def socket_connect():
+    widgets.init_widgets()
 
 
 if __name__ == '__main__':
     widgets.read_history()
-    container = WSGIContainer(app)
-    server = Application([
-        (r'/ws/', WebSocket),
-        (r'.*', FallbackHandler, dict(fallback=container))
-    ])
-    server.listen(5000)
 
     sys.path.insert(0, 'jobs')
     registered_jobs = jobs.find_jobs('jobs')
@@ -130,8 +109,8 @@ if __name__ == '__main__':
     for job in registered_jobs:
         if not hasattr(job, 'JOB'):
             continue
-        
+
         scheduler.add_job(job.JOB['func'], **job.JOB['args'])
 
     scheduler.start()
-    IOLoop.instance().start()
+    socketio.run(app, host='0.0.0.0')

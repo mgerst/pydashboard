@@ -1,4 +1,3 @@
-from app import socketManager
 from pydashboard import widgets
 import random
 
@@ -23,15 +22,17 @@ def poll_services():
     current_down = random.randint(0, 50)
 
     # Update Widgets
-    widgets.update_widget('services_up', socketManager, {
+    widgets.update_widget('services_up', {
         'current': current_up, 'last': last_up,
     })
-    widgets.update_widget('services_partial', socketManager, {
+    widgets.update_widget('services_partial', {
         'current': current_partial, 'last': last_partial,
     })
-    widgets.update_widget('services_down', socketManager, {
+    widgets.update_widget('services_down', {
         'current': current_down, 'last': last_down,
     })
+    print("> emit widgets {} - {} - {}".format(current_up, current_partial, current_down))
+
 
 JOB = {
     'func': poll_services,
